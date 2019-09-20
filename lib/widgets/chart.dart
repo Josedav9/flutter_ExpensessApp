@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../models/transaction.dart';
 import 'package:intl/intl.dart';
+import './chart_bar.dart';
 
 class Chart extends StatelessWidget {
-
   final List<Transaction> recentTransactions;
 
-  Chart( this.recentTransactions );
+  Chart(this.recentTransactions);
 
   List<Map<String, Object>> get groupedTransactionsValue {
     return List.generate(7, (index) {
@@ -16,16 +16,24 @@ class Chart extends StatelessWidget {
       var totalSum = 0;
 
       for (var i = 0; i < recentTransactions.length; i++) {
-        if (recentTransactions[i].date.day == weekDay.day && 
+        if (recentTransactions[i].date.day == weekDay.day &&
             recentTransactions[i].date.month == weekDay.month &&
             recentTransactions[i].date.year == weekDay.year) {
-              totalSum += recentTransactions[i].amount;
-            }
+          totalSum += recentTransactions[i].amount;
+        }
       }
 
-      return {'day': DateFormat.E().format(weekDay).substring(0, 1), 'amount': totalSum};
+      return {
+        'day': DateFormat.E().format(weekDay).substring(0, 1),
+        'amount': totalSum
+      };
+    }).reversed.toList();
+  }
+
+  double get totalSpending {
+    return groupedTransactionsValue.fold(0.0, (sum, item) {
+      return sum + item['amount'];
     });
-    
   }
 
   @override
@@ -33,10 +41,20 @@ class Chart extends StatelessWidget {
     return Card(
       elevation: 6,
       margin: EdgeInsets.all(20),
-      child: Row(
-        children: groupedTransactionsValue.map((data) {
-          return Text('${data['day']}: ${data['amount']}');
-        }).toList()
+      child: Padding(
+        padding: EdgeInsets.all(20),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: groupedTransactionsValue.map((data) {
+              return Flexible(
+                fit: FlexFit.tight,
+                child: ChartBar(
+                  label: data['day'],
+                  spedingAmount: data['amount'],
+                  spendingPcOfTotal: totalSpending == 0.0 ? 0.0 : (data['amount'] as int) / totalSpending,
+                ),
+              );
+            }).toList()),
       ),
     );
   }
