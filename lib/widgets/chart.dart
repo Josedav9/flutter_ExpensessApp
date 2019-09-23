@@ -39,23 +39,23 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 6,
-      margin: EdgeInsets.all(20),
-      child: Padding(
-        padding: EdgeInsets.all(20),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: groupedTransactionsValue.map((data) {
-              return Flexible(
-                fit: FlexFit.tight,
-                child: ChartBar(
-                  label: data['day'],
-                  spedingAmount: data['amount'],
-                  spendingPcOfTotal: totalSpending == 0.0 ? 0.0 : (data['amount'] as int) / totalSpending,
-                ),
-              );
-            }).toList()),
-      ),
+        elevation: 6,
+        margin: EdgeInsets.all(20),
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: groupedTransactionsValue.map((data) {
+                return Flexible(
+                  fit: FlexFit.tight,
+                  child: ChartBar(
+                    label: data['day'],
+                    spedingAmount: data['amount'],
+                    spendingPcOfTotal: totalSpending == 0.0 ? 0.0 : (data['amount'] as int) / totalSpending,
+                  ),
+                );
+              }).toList()),
+        ),
     );
   }
 }
